@@ -62,7 +62,7 @@ export default function MovieDetail() {
   useEffect(() => {
       axios.get(`http://127.0.0.1:8080/api/movies`)
       .then(res=>{
-          setData(res.data.slice(0, 102))
+          setData(res.data.slice(0, 54))
       })
       .catch(e=>{
           alert(`List Failure`)
@@ -77,7 +77,7 @@ export default function MovieDetail() {
     try {
         const req = {
             method: c.get,
-            url: `${c.url}/api/movie/${title}`,
+            url: `${c.url}/api/movie-search/${title}`,
             auth: c.auth
         }
         const res = await axios(req)
@@ -108,14 +108,14 @@ export default function MovieDetail() {
       <CssBaseline />
       <main>
         <div>
-          {/* <nav>
+          <nav>
             <ol>
                 <li><Link to='/movie-register'>Movie Register</Link></li>
                 <li><Link to='/movie-list'>Movie List</Link></li>
                 <li><Link to='/movie-modify'>Movie Modify</Link></li>
                 <li><Link to='/movie-remove'>Movie Remove</Link></li>
             </ol>
-          </nav> */}
+          </nav>
           
           제목 검색 : <input type="text" id='Title'/> 
           <button type="button" class="btn btn-sm btn-primary" id="btnSearch" onClick={fetchSomeMovie}>Search</button>

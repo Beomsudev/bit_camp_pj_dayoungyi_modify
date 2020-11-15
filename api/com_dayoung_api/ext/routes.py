@@ -112,7 +112,7 @@ def initialize_routes(api):
 ############################## CHATBOT ############################
 
 ############################## MOVIE ##############################
-    api.add_resource(Movie, '/api/movie','/api/movie/<string:title>') #  '/api/movie/<string:mov_id>', 
+    api.add_resource(Movie, '/api/movie', '/api/movie/<string:mov_id>', '/api/movie/<string:title>')   
     api.add_resource(Movies, '/api/movies')
     api.add_resource(MovieSearch, '/api/movie-search/<string:title>')
     api.add_resource(MovieDel, '/api/movie-del')

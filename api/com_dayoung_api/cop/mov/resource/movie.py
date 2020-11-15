@@ -7,6 +7,7 @@ from com_dayoung_api.cop.mov.model.movie_dto import MovieDto
 parser = reqparse.RequestParser()
 
 class Movie(Resource):
+
     @staticmethod
     def post():
         parser.add_argument('mov_id', type=int, required=False, help='This field should be a movieid')
@@ -24,8 +25,6 @@ class Movie(Resource):
         parser.add_argument('link_naver', type=str, required=True, help='This field should be a link_naver')
         parser.add_argument('image_naver', type=str, required=True, help='This field should be a image_naver')              
         args = parser.parse_args()
-        print('*********')
-        print(args)
         try:
             MovieDao.register_movie(args)
             return{'code':0, 'message':'SUCCESS'}, 200
@@ -35,32 +34,14 @@ class Movie(Resource):
     @staticmethod
     def get(title):
         print('*****MOVIE SEARCH*****')
-
-        print("SEARCH 진입")
-        print(f'타이틀 : {title}')
-        movie = MovieDao.find_by_title(title)
-        # review = {review[i]: review[i + 1] for i in range(0, len(review), 2)}
-        # review = json.dump(review)
-        movielist = []
-        # for review in reviews:
-            # reviewdic
-        for rev in movie:
-            movielist.append(rev.json())
-        # print(f'Review type : {type(review[0])}')
-        print(f'Review List : {movielist}')
-        return movielist
-
-    # @staticmethod
-    # def get(id: str):
-    #     print('***** MOVIE SEARCH BY TITLE*****')
-    #     try:
-    #         reco_movie = MovieDao.find_by_title(id)
-    #         data = reco_movie.json()
-    #         print(data)
-    #         return data, 200
-    #     except:
-    #         print('fail')
-    #         return {'message':'Title not found'}, 404
+        try:
+            movie = MovieDao.find_by_title(title)
+            movielist = []
+            for rev in movie:
+                movielist.append(rev.json())
+            return movielist
+        except:
+            return {'message':'An error occured searching the movie'}, 500
 
     @staticmethod
     def put():
@@ -80,7 +61,6 @@ class Movie(Resource):
         parser.add_argument('link_naver', type=str, required=True, help='This field should be a link_naver')
         parser.add_argument('image_naver', type=str, required=True, help='This field should be a image_naver')         
         args = parser.parse_args()
-        print(args)
         movies = MovieDto(args['mov_id'], \
                         args['title_kor'], \
                         args['title_naver_eng'], \
@@ -104,9 +84,7 @@ class Movie(Resource):
     @staticmethod
     def delete(mov_id):
         print('*****MOVIE DELETE*****')
-        print(mov_id)
         movie = MovieDao.find_by_id(mov_id) # Primary Key로 삭제하려는 리뷰의 Row를 불러옴.
-        print(movie)
         try:
             MovieDao.delete_movie(movie.mov_id) # 해당 리뷰를 데이터베이스에서 삭제
             return{'code':0, 'message':'SUCCESS'}, 200
