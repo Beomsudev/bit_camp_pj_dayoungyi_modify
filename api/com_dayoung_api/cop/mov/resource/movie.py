@@ -30,7 +30,8 @@ class Movie(Resource):
             return{'code':0, 'message':'SUCCESS'}, 200
         except:
             return {'message':'An error occured registering the movie'}, 500
-
+'''
+search -> search.py 사용
     @staticmethod
     def get(title):
         print('*****MOVIE SEARCH*****')
@@ -42,7 +43,7 @@ class Movie(Resource):
             return movielist
         except:
             return {'message':'An error occured searching the movie'}, 500
-
+'''
     @staticmethod
     def put():
         print('*****MOVIE UPDATE*****')
