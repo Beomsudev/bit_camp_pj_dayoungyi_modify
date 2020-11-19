@@ -4,7 +4,7 @@ from com_dayoung_api.cop.mov.model.movie_dao import MovieDao
 
 class MovieSearch(Resource):
     def get(self, title):
-        print('*****MOVIE SEARCH*****')
+        print('***** MOVIE SEARCH *****')
         movie = MovieDao.find_by_title(title)
         movielist = []
         for d in movie:

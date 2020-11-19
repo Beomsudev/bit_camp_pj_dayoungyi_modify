@@ -29,14 +29,14 @@ class MovieDao(MovieDto):
     
     @staticmethod
     def bulk():
-        print('***** [movies_recommendation] df 삽입 *****')
+        print('***** INSERT MOVIE DF *****')
         recomoviedf = MovieDfo()
         df = recomoviedf.hook()
         print(df)
         session.bulk_insert_mappings(MovieDto, df.to_dict(orient='records'))
         session.commit()
         session.close()
-        print('***** [movies_recommendation] df 삽입 완료 *****')
+        print('***** INSERT MOVIE DF COMPLETE *****')
 
     @staticmethod
     def count():
@@ -44,26 +44,28 @@ class MovieDao(MovieDto):
     
     @staticmethod
     def find_by_title(title):
-        print('##### find title #####')
+        print('***** FIND MOVIE BY TITLE *****')
         return session.query(MovieDto).filter(MovieDto.title_kor.like(title)).all()  
 
     @staticmethod
+    def find_by_id(mov_id):
+        print('***** FIND MOVIE BY ID *****')
+        return session.query(MovieDto).filter(MovieDto.mov_id.like(f'{mov_id}')).one()
+
+    @staticmethod
     def find_by_engtitle_return_id(eng_title):
-        print('##### find eng eng_title #####')
+        print('***** FIND MOVIE BY ENG_TITLE RETURN ID *****')
         movie = session.query(MovieDto).filter(MovieDto.title_naver_eng.like(eng_title)).one()
         movie_json = movie.json()
         mov_id = movie_json['mov_id']
         print(f'mov_id : {mov_id}')
         return mov_id
 
-    @staticmethod
-    def find_by_id(mov_id):
-        print('##### find id #####')
-        return session.query(MovieDto).filter(MovieDto.mov_id.like(f'{mov_id}')).one()
-
     # USE REVIEW
     @staticmethod
     def find_by_title_return_id(title):
+        print('***** FIND MOVIE BY TITLE RETURN ID *****')
+
         movie = session.query(MovieDto).filter(MovieDto.title_kor.like(title)).one()
         print(movie)
         print(movie.json())
@@ -72,26 +74,24 @@ class MovieDao(MovieDto):
         print(f'mov_id : {mov_id}')
         return mov_id
 
-    @classmethod
-    def find_all(cls):
-        print('***** find all movie_reco *****')
-        sql = cls.query
+    @staticmethod
+    def find_all():
+        print('***** FIND ALL MOVIE *****')
+        sql = session.query(MovieDto)
         df = pd.read_sql(sql.statement, sql.session.bind)
         return json.loads(df.to_json(orient='records'))
 
-    @classmethod
-    def find_all_sort_random(cls):
-        print('***** find all movie_reco *****')
-        sql = cls.query
+    @staticmethod
+    def find_all_sort_random():
+        print('***** FIND ALL MOVIE RANDOM *****')
+        sql = session.query(MovieDto)
         df = pd.read_sql(sql.statement, sql.session.bind)
-        df = df.sample(frac=1)
+        df = df.sample(frac=1)  # random shuffle
         return json.loads(df.to_json(orient='records'))
 
-
-# mov_id,movie_l_title,movie_l_org_title,movie_l_genres,movie_l_year,movie_l_rating,movie_l_rating_count
     @staticmethod
     def register_movie(movie):
-        print('##### new movie data registering #####')
+        print('***** NEW MOVIE DATA REGISTERING *****')
         print(movie)
         newMovie = MovieDao(mov_id = movie['mov_id'],
                             title_kor = movie['title_kor'],
@@ -110,11 +110,11 @@ class MovieDao(MovieDto):
         session.add(newMovie)
         session.commit()
         session.close()
-        print('##### new movie data register complete #####')
+        print('***** NEW MOVIE DATA REGISTERING COMPLETE *****')
 
     @staticmethod
     def modify_movie(movie):
-        print('##### movie data modify #####')
+        print('***** MOVIE DATA MODIFY *****')
         print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         session.query(MovieDto).filter(MovieDto.mov_id == movie['mov_id']).update({MovieDto.title_kor:movie['title_kor'],
                                                                                     MovieDto.title_naver_eng:movie['title_naver_eng'],
@@ -131,13 +131,13 @@ class MovieDao(MovieDto):
                                                                                     MovieDto.image_naver:movie['image_naver']})                                                        
         session.commit()
         session.close()
-        print('##### movie data modify complete #####')
+        print('***** MOVIE DATA MODIFY COMPLETE *****')
 
-    @classmethod
-    def delete_movie(cls,mov_id):
-        print('##### movie data delete #####')
-        data = cls.query.get(mov_id)
+    @staticmethod
+    def delete_movie(mov_id):
+        print('***** MOVIE DATA DELETE *****')
+        data = MovieDto.query.get(mov_id)
         db.session.delete(data)
         db.session.commit()
         db.session.close()
-        print('##### movie data delete complete #####')
+        print('***** MOVIE DATA DELETE COMPLETE *****')

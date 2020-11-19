@@ -557,5 +557,4 @@ class MovieDfo:
 #     service = MovieDfo()
 #     service.hook()
 
-    print('***** 무비 렌즈 서비스 완료 *****')
 

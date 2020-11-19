@@ -7,9 +7,9 @@ from com_dayoung_api.cop.mov.model.movie_dto import MovieDto
 parser = reqparse.RequestParser()
 
 class Movie(Resource):
-
     @staticmethod
     def post():
+        print('***** MOVIE REGISTER *****')
         parser.add_argument('mov_id', type=int, required=False, help='This field should be a movieid')
         parser.add_argument('title_kor', type=str, required=True, help='This field should be a title_kor')
         parser.add_argument('title_naver_eng', type=str, required=True, help='This field should be a title_naver_eng')
@@ -30,23 +30,10 @@ class Movie(Resource):
             return{'code':0, 'message':'SUCCESS'}, 200
         except:
             return {'message':'An error occured registering the movie'}, 500
-'''
-search -> search.py 사용
-    @staticmethod
-    def get(title):
-        print('*****MOVIE SEARCH*****')
-        try:
-            movie = MovieDao.find_by_title(title)
-            movielist = []
-            for rev in movie:
-                movielist.append(rev.json())
-            return movielist
-        except:
-            return {'message':'An error occured searching the movie'}, 500
-'''
+
     @staticmethod
     def put():
-        print('*****MOVIE UPDATE*****')
+        print('***** MOVIE UPDATE *****')
         parser.add_argument('mov_id', type=int, required=True, help='This field should be a movieid')
         parser.add_argument('title_kor', type=str, required=True, help='This field should be a title_kor')
         parser.add_argument('title_naver_eng', type=str, required=True, help='This field should be a title_naver_eng')
@@ -84,7 +71,7 @@ search -> search.py 사용
             
     @staticmethod
     def delete(mov_id):
-        print('*****MOVIE DELETE*****')
+        print('***** MOVIE DELETE *****')
         movie = MovieDao.find_by_id(mov_id) # Primary Key로 삭제하려는 리뷰의 Row를 불러옴.
         try:
             MovieDao.delete_movie(movie.mov_id) # 해당 리뷰를 데이터베이스에서 삭제
@@ -101,8 +88,7 @@ class Movies(Resource):
 
     @staticmethod
     def get():
-        print('***** MOVIE ALL LIST RANDOM*****')
+        print('***** MOVIE ALL LIST RANDOM *****')
         data = MovieDao.find_all_sort_random()
-        print(data[0])
         return data, 200        
 

@@ -11,7 +11,6 @@ from com_dayoung_api.cop.cht.resource.chatbot import Chatbot
 
 from com_dayoung_api.cop.mov.resource.movie import Movie, Movies
 from com_dayoung_api.cop.mov.resource.search import MovieSearch
-from com_dayoung_api.cop.mov.resource.movie_del import MovieDel
 from com_dayoung_api.cop.mov.resource.recommendation import MovieRecommendation
 
 from com_dayoung_api.cop.rev.resource.review import Review, Reviews
@@ -62,13 +61,11 @@ api = Api(chatbot)
 movie = Blueprint('movie', __name__, url_prefix='/api/movie')
 movies = Blueprint('movies', __name__, url_prefix='/api/movies')
 movie_search = Blueprint('movie_search', __name__, url_prefix='/api/movie-search')
-movie_del = Blueprint('movie_del', __name__, url_prefix='/api/movie-del')
 movie_recommendation = Blueprint('movie_recommendation', __name__, url_prefix='/api/movie-recommendation')
 
 api = Api(movie)
 api = Api(movies)
 api = Api(movie_search)
-api = Api(movie_del)
 api = Api(movie_recommendation)
 ############################## MOVIE ##############################
 
@@ -112,10 +109,9 @@ def initialize_routes(api):
 ############################## CHATBOT ############################
 
 ############################## MOVIE ##############################
-    api.add_resource(Movie, '/api/movie', '/api/movie/<string:mov_id>', '/api/movie/<string:title>')   
+    api.add_resource(Movie, '/api/movie', '/api/movie/<string:mov_id>', '/api/movie/<string:title_kor>')   
     api.add_resource(Movies, '/api/movies')
     api.add_resource(MovieSearch, '/api/movie-search/<string:title>')
-    api.add_resource(MovieDel, '/api/movie-del')
     api.add_resource(MovieRecommendation, '/api/movie-recommendation/<string:title_naver_eng>')
 ############################## MOVIE ##############################
 
