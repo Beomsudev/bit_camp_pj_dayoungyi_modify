@@ -78,7 +78,6 @@ class MovieDfo:
         print('***** 무비렌즈 메타 데이터 가공 *****')
         fchecker = self.filechecker
 
-
         '''
         [original columns]
         adult,
