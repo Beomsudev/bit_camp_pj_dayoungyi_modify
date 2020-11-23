@@ -1,22 +1,3 @@
-from typing import List
-import json
-import pandas as pd
-import os
-import sys
-import urllib.request
-import csv
-import ast
-import time
-from pandas import DataFrame
-from pathlib import Path
-
-from flask import request, jsonify
-from flask_restful import Resource, reqparse
-
-from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy import create_engine
-from sqlalchemy import func
-
 from com_dayoung_api.ext.db import db, openSession
 
 class MovieDto(db.Model):

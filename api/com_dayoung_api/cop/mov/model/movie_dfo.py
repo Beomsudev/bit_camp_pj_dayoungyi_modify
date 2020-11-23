@@ -1,14 +1,13 @@
-from typing import List
 import json
 import pandas as pd
 import os
 import sys
-import urllib.request
 import csv
 import ast
 import time
 from pandas import DataFrame
 from pathlib import Path
+
 from com_dayoung_api.cmm.util.file_helper import FileReader, FileChecker
 
 class MovieDfo:
