@@ -4,7 +4,6 @@ import os
 import sys
 import csv
 import ast
-import time
 from pandas import DataFrame
 from pathlib import Path
 
