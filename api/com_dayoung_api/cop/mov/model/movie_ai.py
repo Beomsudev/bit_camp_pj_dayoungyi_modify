@@ -77,7 +77,7 @@ class MovieAi:
         # '''
         # # TEST 줄거리(tfidf) 기반 추천
 
-        # cv_matrix = self.create_count_vectorizer_matrix()
+        cv_matrix = self.create_count_vectorizer_matrix()
         # TEST 감독(가중치*3), 배우(가중치*1), 키워드(가중치*1) (CountVectorizer)기반 추천
         # print(self.get_recommendations_with_count_vectorizer('The Godfather').head(10)) # 대부1
         # '''
@@ -289,90 +289,90 @@ class MovieAi:
     #     movie_indices = [i[0] for i in sim_scores]
     #     return titles.iloc[movie_indices]
 
-    # def create_count_vectorizer_matrix(self):
-    #     smd = self.smd
-    #     indices = self.indices
-    #     cosine_sim = self.cosine_sim
-    #     titles = self.titles
-    #     md = self.md
-    #     links_small = self.links_small
-    #     keyword_frequency = self.keyword_frequency
+    def create_count_vectorizer_matrix(self):
+        smd = self.smd
+        indices = self.indices
+        cosine_sim = self.cosine_sim
+        titles = self.titles
+        md = self.md
+        links_small = self.links_small
+        keyword_frequency = self.keyword_frequency
 
-    #     path = os.path.abspath('')
-    #     fname = '\com_dayoung_api\cop\mov\model\data\credits.csv'
-    #     credits = pd.read_csv(path + fname, encoding='utf-8')
-    #     fname = '\com_dayoung_api\cop\mov\model\data\keywords.csv'
-    #     keywords = pd.read_csv(path + fname, encoding='utf-8')
+        path = os.path.abspath('')
+        fname = '\com_dayoung_api\cop\mov\model\data\credits.csv'
+        credits = pd.read_csv(path + fname, encoding='utf-8')
+        fname = '\com_dayoung_api\cop\mov\model\data\keywords.csv'
+        keywords = pd.read_csv(path + fname, encoding='utf-8')
 
-    #     credits['crew'][0]
+        credits['crew'][0]
 
-    #     keywords['id'] = keywords['id'].astype('int')
-    #     credits['id'] = credits['id'].astype('int')
+        keywords['id'] = keywords['id'].astype('int')
+        credits['id'] = credits['id'].astype('int')
 
-    #     md['id'] = md['id'].astype('int')
+        md['id'] = md['id'].astype('int')
 
-    #     md.shape
+        md.shape
 
-    #     md = md.merge(credits, on='id')
-    #     md = md.merge(keywords, on='id')
+        md = md.merge(credits, on='id')
+        md = md.merge(keywords, on='id')
 
-    #     smd = md[md['id'].isin(links_small)]
-    #     smd.shape
+        smd = md[md['id'].isin(links_small)]
+        smd.shape
 
-    #     smd['cast'] = smd['cast'].apply(literal_eval)
-    #     smd['crew'] = smd['crew'].apply(literal_eval)
-    #     smd['keywords'] = smd['keywords'].apply(literal_eval)
-    #     smd['cast_size'] = smd['cast'].apply(lambda x: len(x))
-    #     smd['crew_size'] = smd['crew'].apply(lambda x: len(x))
+        smd['cast'] = smd['cast'].apply(literal_eval)
+        smd['crew'] = smd['crew'].apply(literal_eval)
+        smd['keywords'] = smd['keywords'].apply(literal_eval)
+        smd['cast_size'] = smd['cast'].apply(lambda x: len(x))
+        smd['crew_size'] = smd['crew'].apply(lambda x: len(x))
 
-    #     smd['director'] = smd['crew'].apply(self.get_director)
+        smd['director'] = smd['crew'].apply(self.get_director)
 
-    #     # 출연진 중 상위에 노출되는 3명만 추출
-    #     smd['cast'] = smd['cast'].apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
-    #     smd['cast'] = smd['cast'].apply(lambda x: x[:3] if len(x) >= 3 else x)
+        # 출연진 중 상위에 노출되는 3명만 추출
+        smd['cast'] = smd['cast'].apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
+        smd['cast'] = smd['cast'].apply(lambda x: x[:3] if len(x) >= 3 else x)
 
-    #     # 출연진의 이름에서 공백 삭제
-    #     smd['keywords'] = smd['keywords'].apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
+        # 출연진의 이름에서 공백 삭제
+        smd['keywords'] = smd['keywords'].apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
 
-    #     # 감독의 이름에서 공백 삭제 및 3번 언급
-    #     smd['director'] = smd['director'].astype('str').apply(lambda x: str.lower(x.replace(" ", "")))
-    #     smd['director'] = smd['director'].apply(lambda x: [x, x, x])
+        # 감독의 이름에서 공백 삭제 및 3번 언급
+        smd['director'] = smd['director'].astype('str').apply(lambda x: str.lower(x.replace(" ", "")))
+        smd['director'] = smd['director'].apply(lambda x: [x, x, x])
 
-    #     # 키워드 빈도수
-    #     keyword_frequency = smd.apply(lambda x: pd.Series(x['keywords']), axis=1).stack().reset_index(level=1, drop=True)
-    #     keyword_frequency.name = 'keyword'
+        # 키워드 빈도수
+        keyword_frequency = smd.apply(lambda x: pd.Series(x['keywords']), axis=1).stack().reset_index(level=1, drop=True)
+        keyword_frequency.name = 'keyword'
 
-    #     keyword_frequency = keyword_frequency.value_counts()
-    #     keyword_frequency[:5]
+        keyword_frequency = keyword_frequency.value_counts()
+        keyword_frequency[:5]
 
-    #     # 2번 이상 등장한 키워드만 추출
-    #     keyword_frequency = keyword_frequency[keyword_frequency > 1]
+        # 2번 이상 등장한 키워드만 추출
+        keyword_frequency = keyword_frequency[keyword_frequency > 1]
 
-    #     # 어근 추출을 통해 동일 의미&다른 형태의 단어(dogs&dog, imaging&image 등)를 동일한 단어로 인식
-    #     stemmer = SnowballStemmer('english')
+        # 어근 추출을 통해 동일 의미&다른 형태의 단어(dogs&dog, imaging&image 등)를 동일한 단어로 인식
+        stemmer = SnowballStemmer('english')
 
-    #     self.keyword_frequency = keyword_frequency
+        self.keyword_frequency = keyword_frequency
 
-    #     # 키워드의 어근을 찾아서 공백 제거 후 세팅
-    #     smd['keywords'] = smd['keywords'].apply(self.filter_keywords)
-    #     smd['keywords'] = smd['keywords'].apply(lambda x: [stemmer.stem(i) for i in x])
-    #     smd['keywords'] = smd['keywords'].apply(lambda x: [str.lower(i.replace(" ", "")) for i in x])
+        # 키워드의 어근을 찾아서 공백 제거 후 세팅
+        smd['keywords'] = smd['keywords'].apply(self.filter_keywords)
+        smd['keywords'] = smd['keywords'].apply(lambda x: [stemmer.stem(i) for i in x])
+        smd['keywords'] = smd['keywords'].apply(lambda x: [str.lower(i.replace(" ", "")) for i in x])
 
-    #     smd['soup'] = smd['keywords'] + smd['cast'] + smd['director'] + smd['genres']
-    #     smd['soup'] = smd['soup'].apply(lambda x: ' '.join(x))
+        smd['soup'] = smd['keywords'] + smd['cast'] + smd['director'] + smd['genres']
+        smd['soup'] = smd['soup'].apply(lambda x: ' '.join(x))
 
-    #     count = CountVectorizer(analyzer='word', ngram_range=(1,2), min_df=0, stop_words='english')
-    #     count_matrix = count.fit_transform(smd['soup'])
+        count = CountVectorizer(analyzer='word', ngram_range=(1,2), min_df=0, stop_words='english')
+        count_matrix = count.fit_transform(smd['soup'])
 
-    #     cosine_sim = cosine_similarity(count_matrix, count_matrix)
-    #     smd = smd.reset_index()
-    #     titles = smd['title']
-    #     indices = pd.Series(smd.index, index=smd['title'])
+        cosine_sim = cosine_similarity(count_matrix, count_matrix)
+        smd = smd.reset_index()
+        titles = smd['title']
+        indices = pd.Series(smd.index, index=smd['title'])
 
-    #     self.indices = indices
-    #     self.cosine_sim = cosine_sim
-    #     self.titles = titles        
-    #     self.smd = smd
+        self.indices = indices
+        self.cosine_sim = cosine_sim
+        self.titles = titles        
+        self.smd = smd
 
     # def get_recommendations_with_count_vectorizer(self, title):
     #     indices = self.indices
